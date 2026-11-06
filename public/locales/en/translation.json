@@ -1,0 +1,212 @@
+{
+	"nav": {
+		"listen": "Listen",
+		"features": "Features",
+		"themes": "Themes",
+		"download": "Download",
+		"language": "Passer en français",
+		"roadmap": "Roadmap"
+	},
+	"hero": {
+		"label": "Free and open source",
+		"title": "Your music studio, free and open.",
+		"description": "Arrange your audio, mix it and export your track on Linux, macOS and Windows.",
+		"download": "Download for free",
+		"listen": "Hear the demo song",
+		"imageAlt": "Tonique with a project open: colored audio clips on the timeline, the effects browser and the mixer"
+	},
+	"listen": {
+		"label": "Try it now",
+		"title": "Press play. Take it apart.",
+		"description": "Listen to Tonique's demo song, part by part."
+	},
+	"mixer": {
+		"play": "Play the demo song",
+		"pause": "Pause the demo song",
+		"loading": "Loading the stems...",
+		"error": "The audio couldn't load. Press play to try again.",
+		"mute": "Mute {{name}}",
+		"solo": "Solo {{name}}",
+		"key": "126 BPM · F minor"
+	},
+	"features": {
+		"label": "Your workflow",
+		"title": "From first idea to finished track",
+		"description": "Everything you need to build a song out of audio, in one window.",
+		"previous": "Previous feature",
+		"next": "Next feature",
+		"items": {
+			"bring": {
+				"title": "Bring in your sounds",
+				"description": "Browse your folders, preview your files and drag them onto the timeline."
+			},
+			"loop": {
+				"title": "Loop anything",
+				"description": "Extend a clip to repeat it, and set a loop range to keep working on one section."
+			},
+			"mix": {
+				"title": "Group and balance",
+				"description": "Put your drums in a group and follow every track's level on its meter."
+			},
+			"warp": {
+				"title": "Stay in tempo and in tune",
+				"description": "Warp a clip to your project's tempo, then transpose or detune it."
+			}
+		}
+	},
+	"effects": {
+		"label": "Effects",
+		"title": "Shape your sound",
+		"description": "Stack effects on any track, each with a clear, visual editor.",
+		"items": {
+			"filter": {
+				"title": "Filter",
+				"description": "Low-pass and high-pass, with a curve you can see."
+			},
+			"echo": {
+				"title": "Echo",
+				"description": "A feedback delay with time, feedback and mix."
+			},
+			"spectrum": {
+				"title": "Spectrum",
+				"description": "See your frequencies anywhere in the chain."
+			},
+			"utility": {
+				"title": "Utility",
+				"description": "Gain, balance, stereo width, mono and phase."
+			}
+		}
+	},
+	"themes": {
+		"label": "Themes",
+		"title": "Nine looks, one studio",
+		"description": "Try them here, each one is a real screenshot. You can also duplicate any theme to make your own.",
+		"imageAlt": "Tonique with the {{name}} theme"
+	},
+	"engine": {
+		"label": "Performance",
+		"title": "Built to stay fast",
+		"description": "Tonique is native software, written in Rust, with an audio engine designed for real-time work.",
+		"imageAlt": "Inside Tonique's engine: the demo song's clips, faders and groups connected as a graph of audio nodes",
+		"caption": "A look inside the engine: how the demo song's audio flows, from each clip to the output.",
+		"items": {
+			"rust": {
+				"label": "Language",
+				"title": "Written in Rust",
+				"description": "Compiled to native code, with no browser running underneath."
+			},
+			"cores": {
+				"label": "Engine",
+				"title": "Multi-core audio",
+				"description": "The engine can spread your song's processing across several CPU cores."
+			},
+			"native": {
+				"label": "Platforms",
+				"title": "Three systems",
+				"description": "The same studio on Linux, macOS and Windows."
+			},
+			"open": {
+				"label": "License",
+				"title": "Open source",
+				"description": "All the code is on GitHub, under the MIT or Apache-2.0 license."
+			}
+		}
+	},
+	"download": {
+		"title": "Free for everyone.",
+		"description": "Download it and start making music.",
+		"cta": "Download for free"
+	},
+	"footer": {
+		"madeBy": "Made by",
+		"contact": "Contact"
+	},
+	"roadmap": {
+		"label": "Roadmap",
+		"title": "What's next for Tonique",
+		"description": "Everything is developed in the open on GitHub.",
+		"today": "Today",
+		"link": "See the milestones on GitHub",
+		"updated": "Updated November 2026",
+		"phases": {
+			"done": "Just added",
+			"now": "In progress",
+			"next": "Next, for 1.0",
+			"later": "Later, for 2.0"
+		},
+		"items": {
+			"warp": {
+				"title": "Clip warping",
+				"description": "Keep a clip in time with your tempo, and transpose it."
+			},
+			"recording": {
+				"title": "Audio recording",
+				"description": "Record with a count-in, input monitoring and a take for each loop."
+			},
+			"fades": {
+				"title": "Fades and crossfades",
+				"description": "Drag handles on a clip and choose the curve."
+			},
+			"effects": {
+				"title": "New effects",
+				"description": "Compressor, limiter, EQ, reverb and saturation."
+			},
+			"midi": {
+				"title": "MIDI",
+				"description": "MIDI tracks, a piano roll and a built-in synth."
+			},
+			"plugins": {
+				"title": "Plugins",
+				"description": "Load CLAP plugins, then VST3."
+			},
+			"automation": {
+				"title": "Automation",
+				"description": "Change track and effect settings over time."
+			}
+		}
+	},
+	"get": {
+		"title": "Download Tonique",
+		"free": "Free and open source.",
+		"version": "Version {{version}}, released {{date}}",
+		"mobile": "Tonique runs on computers. Open this page on your Windows, macOS or Linux computer to install it.",
+		"system": "Operating system",
+		"button": "Download for {{system}}",
+		"size": "{{size}} MB",
+		"installTitle": "Install",
+		"copy": "Copy",
+		"copied": "Copied",
+		"requirements": "Requirements",
+		"uninstall": "Uninstall",
+		"allVersions": "All versions and checksums",
+		"fromSource": "Build from source",
+		"windows": {
+			"steps": {
+				"extract": "Right-click the downloaded zip and choose Extract All.",
+				"run": "Open the extracted Tonique folder and double-click Tonique.exe.",
+				"warning": "Tonique isn't signed yet, so SmartScreen may warn you. Click More info, then Run anyway."
+			},
+			"requirements": "64-bit Windows.",
+			"uninstall": "Delete the Tonique folder."
+		},
+		"macos": {
+			"steps": {
+				"drag": "Open the .dmg and drag Tonique to Applications.",
+				"launch": "Open Tonique from Applications. It isn't notarized yet, so macOS will block it the first time: click Done.",
+				"allow": "Go to System Settings, then Privacy & Security, scroll down to Security and click Open Anyway."
+			},
+			"older": "On macOS 14 or earlier, you can instead right-click Tonique in Applications and choose Open.",
+			"requirements": "macOS 11 or later, on Apple Silicon or Intel.",
+			"uninstall": "Move Tonique from Applications to the Trash."
+		},
+		"linux": {
+			"steps": {
+				"extract": "Extract the archive from the folder you downloaded it to.",
+				"install": "Run the installer. It installs Tonique for your user, in ~/.local.",
+				"open": "Open Tonique from your applications menu, or from a terminal."
+			},
+			"requirements": "64-bit (x86_64) with ALSA, which most desktops already have.",
+			"uninstall": "From the extracted folder, run:"
+		}
+	}
+}

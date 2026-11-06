@@ -1,0 +1,106 @@
+.tq-page {
+	--tq-bg: #0f1014;
+	--tq-panel: #181a20;
+	--tq-line: rgb(255 255 255 / 0.12);
+	--tq-text: #f2f3f5;
+	--tq-muted: #a2a8b3;
+	--tq-accent: #00c9d4;
+	background: var(--tq-bg);
+	color: var(--tq-text);
+	font-family: "Archivo Variable", system-ui, sans-serif;
+	font-stretch: 100%;
+}
+
+.tq-display {
+	font-family: "Archivo Variable", system-ui, sans-serif;
+	font-stretch: 70%;
+	font-weight: 800;
+	letter-spacing: -0.01em;
+	line-height: 1;
+	text-wrap: balance;
+}
+
+.tq-label {
+	font-family: "JetBrains Mono Variable", ui-monospace, monospace;
+	font-size: 0.8125rem;
+	font-weight: 500;
+	letter-spacing: 0.14em;
+	text-transform: uppercase;
+	color: var(--tq-accent);
+}
+
+.tq-button {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	padding: 0.8rem 1.6rem;
+	border-radius: 0.5rem;
+	background: var(--tq-accent);
+	color: #06181a;
+	font-weight: 700;
+	transition: filter 150ms;
+}
+.tq-button:hover {
+	filter: brightness(1.15);
+}
+
+.tq-link {
+	color: var(--tq-text);
+	text-decoration: underline;
+	text-decoration-color: rgb(255 255 255 / 0.35);
+	text-underline-offset: 4px;
+	transition: text-decoration-color 150ms;
+}
+.tq-link:hover {
+	text-decoration-color: currentColor;
+}
+
+.tq-page :focus-visible {
+	outline: 2px solid var(--tq-accent);
+	outline-offset: 3px;
+}
+
+/* The playhead over the hero's screenshot: bars 9 to 17, the loop it shows. */
+.tq-playhead {
+	position: absolute;
+	top: 6.7%;
+	bottom: 8.2%;
+	left: 35.2%;
+	width: 2px;
+	background: #fff;
+	box-shadow: 0 0 8px rgb(255 255 255 / 0.6);
+	animation: tq-play 15.238s linear infinite;
+}
+@keyframes tq-play {
+	to {
+		left: 53.4%;
+	}
+}
+
+.tq-pulse {
+	animation: tq-pulse 1.8s ease-in-out infinite;
+}
+@keyframes tq-pulse {
+	50% {
+		opacity: 0.35;
+	}
+}
+
+.tq-carousel {
+	scrollbar-width: none;
+}
+.tq-carousel::-webkit-scrollbar {
+	display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.tq-playhead,
+	.tq-pulse {
+		animation: none;
+	}
+}
+
+/* Anchors land below the sticky navigation. */
+.tq-page section {
+	scroll-margin-top: 4rem;
+}

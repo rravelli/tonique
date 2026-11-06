@@ -1,0 +1,94 @@
+diff --git a/src/ui/app/tests/readme.rs b/src/ui/app/tests/readme.rs
+index b1f1cbe..0e80221 100644
+--- a/src/ui/app/tests/readme.rs
++++ b/src/ui/app/tests/readme.rs
+@@ -20,7 +20,7 @@ use tonique_engine::time::BeatPos;
+ /// The window, in points: at [`PIXELS_PER_POINT`], the images are
+ /// 1625 × 1013 pixels.
+ const SIZE: Vec2 = vec2(1300., 810.);
+-const PIXELS_PER_POINT: f32 = 1.25;
++const PIXELS_PER_POINT: f32 = 2.5;
+ /// The song's first bars, fit in the timeline: all of it and a little room.
+ const SHOWN_BEATS: f64 = 30. * 4.;
+ /// Decoding the stems takes a moment; longer, something's wrong.
+@@ -37,6 +37,9 @@ fn images_dir() -> PathBuf {
+ 
+ /// The demo song, made afresh in the test's own folder.
+ fn demo_song() -> PathBuf {
++    if let Some(song) = std::env::var_os("TONIQUE_DEMO_SONG") {
++        return PathBuf::from(song);
++    }
+     let dir = config_dir().unwrap().join("Demo Song");
+     let status = Command::new("python3")
+         .arg(repo().join("scripts/make_demo.py"))
+@@ -125,3 +128,70 @@ fn save(harness: &mut Harness<'_, ToniqueApp>, name: &str) {
+     image.save(&path).unwrap();
+     eprintln!("Wrote {}", path.display());
+ }
++
++
++/// Everything the Tonique web page shows.
++#[test]
++#[ignore = "renders with the GPU; run with --ignored"]
++fn page_images() {
++    use crate::core::effect::EffectKind;
++    use crate::ui::workspace::BottomView;
++    let song = demo_song();
++    for theme in [
++        "dark", "light", "studio", "console", "session", "slate", "tape", "graphite",
++        "high-contrast",
++    ] {
++        let mut harness = open(&song, theme);
++        harness.get_by_label("Effects").click();
++        save(&mut harness, &format!("theme-{theme}"));
++    }
++
++    // A track's effects, in the bottom panel.
++    let mut harness = open(&song, "dark");
++    harness.get_by_label("Effects").click();
++    harness.run_steps(2);
++    {
++        let app = harness.state_mut();
++        let id = app.state.tracks().find(|t| t.name == "Chords").unwrap().id;
++        for (i, kind) in [
++            EffectKind::Filter,
++            EffectKind::Echo,
++            EffectKind::Spectrum,
++            EffectKind::Utility,
++        ]
++        .into_iter()
++        .enumerate()
++        {
++            app.state.add_effect(&id, kind, i);
++        }
++        app.state.select_track(&id);
++        app.workspace.bottom_panel_open = true;
++        app.workspace.bottom_view = BottomView::Effects;
++    }
++    harness.run_steps(8);
++    save(&mut harness, "effects");
++
++    // A clip's details: its warp and pitch.
++    {
++        let app = harness.state_mut();
++        let track = app.state.tracks().find(|t| t.name == "Lead").unwrap();
++        let clip = track.clips[0].id;
++        app.state.select_clips(vec![clip]);
++        app.workspace.show_view(&mut app.state, BottomView::Clip(clip));
++    }
++    harness.run_steps(8);
++    save(&mut harness, "clip");
++
++    // The file browser.
++    let mut harness = open(&song, "dark");
++    harness.run_steps(4);
++    save(&mut harness, "browser");
++
++    // The engine's graph.
++    {
++        let app = harness.state_mut();
++        app.workspace.toggle_graph();
++    }
++    harness.run_steps(12);
++    save(&mut harness, "graph");
++}

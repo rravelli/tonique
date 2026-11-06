@@ -1,0 +1,212 @@
+{
+	"nav": {
+		"listen": "Écouter",
+		"features": "Fonctionnalités",
+		"themes": "Thèmes",
+		"download": "Télécharger",
+		"language": "Switch to English",
+		"roadmap": "Roadmap"
+	},
+	"hero": {
+		"label": "Gratuit et open source",
+		"title": "Votre studio de musique, libre et gratuit.",
+		"description": "Composez, mixez et exportez vos morceaux sur Linux, macOS et Windows.",
+		"download": "Télécharger gratuitement",
+		"listen": "Écouter la démo",
+		"imageAlt": "Tonique avec un projet ouvert : des clips audio colorés sur la timeline, le navigateur d'effets et la table de mixage"
+	},
+	"listen": {
+		"label": "Essayez dès maintenant",
+		"title": "Lancez la lecture. Jouez avec les pistes.",
+		"description": "Écoutez le morceau de démonstration de Tonique, piste par piste."
+	},
+	"mixer": {
+		"play": "Lancer la démo",
+		"pause": "Mettre la démo en pause",
+		"loading": "Chargement des pistes…",
+		"error": "Impossible de charger l'audio. Appuyez sur lecture pour réessayer.",
+		"mute": "Couper {{name}}",
+		"solo": "Mettre {{name}} en solo",
+		"key": "126 BPM · fa mineur"
+	},
+	"features": {
+		"label": "Votre flux de travail",
+		"title": "De la première idée au morceau final",
+		"description": "Tout ce qu'il faut pour créer un morceau à partir de vos fichiers audio, dans une seule fenêtre.",
+		"previous": "Fonctionnalité précédente",
+		"next": "Fonctionnalité suivante",
+		"items": {
+			"bring": {
+				"title": "Importez vos sons",
+				"description": "Parcourez vos dossiers, écoutez vos fichiers et glissez-les sur la timeline."
+			},
+			"loop": {
+				"title": "Mettez vos sons en boucle",
+				"description": "Allongez un clip pour le répéter et délimitez une boucle pour retravailler une section."
+			},
+			"mix": {
+				"title": "Groupez et équilibrez vos pistes",
+				"description": "Rassemblez vos pistes de batterie dans un groupe et surveillez le niveau de chacune sur son vumètre."
+			},
+			"warp": {
+				"title": "Restez dans le tempo et dans le ton",
+				"description": "Calez un clip sur le tempo du projet, puis transposez-le ou ajustez finement sa hauteur."
+			}
+		}
+	},
+	"effects": {
+		"label": "Effets",
+		"title": "Sculptez votre son",
+		"description": "Chaînez les effets sur n'importe quelle piste, chacun avec son éditeur visuel.",
+		"items": {
+			"filter": {
+				"title": "Filter",
+				"description": "Passe-bas ou passe-haut, avec une courbe de réponse visible."
+			},
+			"echo": {
+				"title": "Echo",
+				"description": "Un delay à régler en temps, réinjection et dosage."
+			},
+			"spectrum": {
+				"title": "Spectrum",
+				"description": "Visualisez vos fréquences à n'importe quel point de la chaîne d'effets."
+			},
+			"utility": {
+				"title": "Utility",
+				"description": "Gain, balance, largeur stéréo, mono et phase."
+			}
+		}
+	},
+	"themes": {
+		"label": "Thèmes",
+		"title": "Neuf ambiances, un studio",
+		"description": "Essayez-les ici : ce sont de vraies captures d'écran. Vous pouvez aussi dupliquer un thème pour créer le vôtre.",
+		"imageAlt": "Tonique avec le thème {{name}}"
+	},
+	"engine": {
+		"label": "Performance",
+		"title": "Conçu pour rester rapide",
+		"description": "Tonique est un logiciel natif écrit en Rust, avec un moteur audio pensé pour le temps réel.",
+		"imageAlt": "Dans les coulisses du moteur de Tonique : les clips, faders et groupes du morceau de démonstration reliés en un graphe de nœuds audio",
+		"caption": "Dans les coulisses du moteur : le parcours de l'audio du morceau de démonstration, de chaque clip jusqu'à la sortie.",
+		"items": {
+			"rust": {
+				"label": "Langage",
+				"title": "Écrit en Rust",
+				"description": "Compilé en code natif, sans navigateur en arrière-plan."
+			},
+			"cores": {
+				"label": "Moteur",
+				"title": "Audio multicœur",
+				"description": "Le moteur peut répartir le traitement de votre morceau sur plusieurs cœurs."
+			},
+			"native": {
+				"label": "Plateformes",
+				"title": "Trois systèmes",
+				"description": "Le même studio sur Linux, macOS et Windows."
+			},
+			"open": {
+				"label": "Licence",
+				"title": "Open source",
+				"description": "Tout le code est sur GitHub, sous licence MIT ou Apache-2.0."
+			}
+		}
+	},
+	"download": {
+		"title": "Gratuit, pour tous.",
+		"description": "Téléchargez-le et lancez-vous.",
+		"cta": "Télécharger gratuitement"
+	},
+	"footer": {
+		"madeBy": "Créé par",
+		"contact": "Contact"
+	},
+	"roadmap": {
+		"label": "Roadmap",
+		"title": "La suite pour Tonique",
+		"description": "Tout se développe en public sur GitHub.",
+		"today": "Aujourd'hui",
+		"link": "Voir la roadmap sur GitHub",
+		"updated": "Mis à jour en novembre 2026",
+		"phases": {
+			"done": "Tout juste ajouté",
+			"now": "En cours",
+			"next": "Ensuite, pour la 1.0",
+			"later": "Plus tard, pour la 2.0"
+		},
+		"items": {
+			"warp": {
+				"title": "Warp des clips",
+				"description": "Calez un clip sur votre tempo et transposez-le."
+			},
+			"recording": {
+				"title": "Enregistrement audio",
+				"description": "Décompte, écoute de retour et une prise par passage en boucle."
+			},
+			"fades": {
+				"title": "Fondus et fondus enchaînés",
+				"description": "Réglez-les à la souris sur le clip et choisissez leur courbe."
+			},
+			"effects": {
+				"title": "Nouveaux effets",
+				"description": "Compresseur, limiteur, égaliseur, reverb et saturation."
+			},
+			"midi": {
+				"title": "MIDI",
+				"description": "Pistes MIDI, piano roll et synthé intégré."
+			},
+			"plugins": {
+				"title": "Plugins",
+				"description": "Chargez des plugins CLAP, puis VST3."
+			},
+			"automation": {
+				"title": "Automation",
+				"description": "Faites évoluer les réglages des pistes et des effets dans le temps."
+			}
+		}
+	},
+	"get": {
+		"title": "Télécharger Tonique",
+		"free": "Gratuit et open source.",
+		"version": "Version {{version}}, publiée le {{date}}",
+		"mobile": "Tonique fonctionne sur ordinateur. Ouvrez cette page sur votre ordinateur Windows, macOS ou Linux pour l'installer.",
+		"system": "Système d'exploitation",
+		"button": "Télécharger pour {{system}}",
+		"size": "{{size}} Mo",
+		"installTitle": "Installation",
+		"copy": "Copier",
+		"copied": "Copié",
+		"requirements": "Configuration requise",
+		"uninstall": "Désinstallation",
+		"allVersions": "Toutes les versions et sommes de contrôle",
+		"fromSource": "Compiler depuis les sources",
+		"windows": {
+			"steps": {
+				"extract": "Faites un clic droit sur le zip téléchargé et choisissez Extraire tout.",
+				"run": "Ouvrez le dossier Tonique extrait et double-cliquez sur Tonique.exe.",
+				"warning": "Tonique n'est pas encore signé, SmartScreen peut donc afficher un avertissement. Cliquez sur Informations complémentaires, puis sur Exécuter quand même."
+			},
+			"requirements": "Windows 64 bits.",
+			"uninstall": "Supprimez le dossier Tonique."
+		},
+		"macos": {
+			"steps": {
+				"drag": "Ouvrez le .dmg et glissez Tonique dans Applications.",
+				"launch": "Ouvrez Tonique depuis Applications. Il n'est pas encore notarié, macOS le bloque donc la première fois : cliquez sur Terminé.",
+				"allow": "Allez dans Réglages Système, puis Confidentialité et sécurité, descendez jusqu'à Sécurité et cliquez sur Ouvrir quand même."
+			},
+			"older": "Sur macOS 14 ou antérieur, vous pouvez aussi faire un clic droit sur Tonique dans Applications et choisir Ouvrir.",
+			"requirements": "macOS 11 ou ultérieur, sur Apple Silicon ou Intel.",
+			"uninstall": "Placez Tonique dans la corbeille depuis Applications."
+		},
+		"linux": {
+			"steps": {
+				"extract": "Extrayez l'archive depuis le dossier où vous l'avez téléchargée.",
+				"install": "Lancez l'installation. Tonique s'installe pour votre utilisateur, dans ~/.local.",
+				"open": "Ouvrez Tonique depuis le menu des applications ou depuis un terminal."
+			},
+			"requirements": "64 bits (x86_64) avec ALSA, déjà présent sur la plupart des bureaux.",
+			"uninstall": "Depuis le dossier extrait, lancez :"
+		}
+	}
+}
