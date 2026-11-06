@@ -21,3 +21,7 @@ npm run typecheck
 - `tools/` explains how the demo song and the screenshots are made.
 
 Pushing to `main` builds the site and publishes it to the `gh-pages` branch.
+
+## License
+
+[MIT](LICENSE)

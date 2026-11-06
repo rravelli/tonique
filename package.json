@@ -34,5 +34,6 @@
 	"prettier": {
 		"useTabs": true,
 		"tabWidth": 4
-	}
+	},
+	"license": "MIT"
 }
