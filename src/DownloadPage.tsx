@@ -152,6 +152,16 @@ export default function DownloadPage() {
 					))}
 				</div>
 
+				<div className="mb-8 rounded-lg border border-[#f5c542]/40 bg-[#f5c542]/[0.07] px-4 py-3.5">
+					<p className="font-semibold mb-1">{t("get.earlyTitle")}</p>
+					<p className="text-[var(--tq-muted)]">
+						{t("get.early")}{" "}
+						<a href={`${TONIQUE_URL}/issues`} className="tq-link">
+							{t("get.earlyLink")}
+						</a>
+					</p>
+				</div>
+
 				<a
 					href={asset?.browser_download_url ?? TONIQUE_DOWNLOAD_URL}
 					className="tq-button w-full !py-4 text-lg"

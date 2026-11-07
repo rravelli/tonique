@@ -64,6 +64,18 @@ function Hero() {
 					transition={{ duration: 0.7 }}
 					className="text-center"
 				>
+					<a
+						href="#roadmap"
+						className="inline-flex flex-wrap items-center justify-center gap-x-2 gap-y-0.5 mb-6 px-3.5 py-1.5 rounded-2xl border border-[var(--tq-line)] bg-[var(--tq-panel)] text-sm hover:border-white/30 transition-colors"
+					>
+						<span className="inline-flex items-center gap-2">
+							<span aria-hidden="true" className="h-2 w-2 shrink-0 rounded-full bg-[#f5c542] tq-pulse" />
+							{t("hero.status")}
+						</span>
+						<span className="text-[var(--tq-accent)] font-semibold">
+							{t("hero.statusLink")} →
+						</span>
+					</a>
 					<p className="tq-label mb-5">{t("hero.label")}</p>
 					<h1 className="tq-display text-6xl sm:text-7xl md:text-8xl lg:text-9xl mb-6">
 						{t("hero.title")}

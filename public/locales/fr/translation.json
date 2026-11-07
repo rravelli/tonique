@@ -9,6 +9,8 @@
 	},
 	"hero": {
 		"label": "Gratuit et open source",
+		"status": "Bêta : encore en développement",
+		"statusLink": "Voir la suite",
 		"title": "Votre studio de musique, libre et gratuit.",
 		"description": "Composez, mixez et exportez vos morceaux sur Linux, macOS et Windows.",
 		"download": "Télécharger gratuitement",
@@ -169,6 +171,9 @@
 		"title": "Télécharger Tonique",
 		"free": "Gratuit et open source.",
 		"version": "Version {{version}}, publiée le {{date}}",
+		"earlyTitle": "Tonique est en bêta",
+		"early": "Vous pouvez déjà arranger, caler et mixer de l'audio, mais l'enregistrement, le MIDI, les plugins et l'automation ne sont pas encore là, et vous pourriez rencontrer des bugs. Enregistrez souvent vos projets.",
+		"earlyLink": "Signaler un problème sur GitHub",
 		"mobile": "Tonique fonctionne sur ordinateur. Ouvrez cette page sur votre ordinateur Windows, macOS ou Linux pour l'installer.",
 		"system": "Système d'exploitation",
 		"button": "Télécharger pour {{system}}",
