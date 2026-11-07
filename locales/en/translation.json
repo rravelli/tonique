@@ -9,6 +9,8 @@
 	},
 	"hero": {
 		"label": "Free and open source",
+		"status": "Beta: still in development",
+		"statusLink": "See what's coming",
 		"title": "Your music studio, free and open.",
 		"description": "Arrange your audio, mix it and export your track on Linux, macOS and Windows.",
 		"download": "Download for free",
@@ -169,6 +171,9 @@
 		"title": "Download Tonique",
 		"free": "Free and open source.",
 		"version": "Version {{version}}, released {{date}}",
+		"earlyTitle": "Tonique is in beta",
+		"early": "You can already arrange, warp and mix audio, but recording, MIDI, plugins and automation aren't there yet, and you may run into bugs. Save your projects often.",
+		"earlyLink": "Report a problem on GitHub",
 		"mobile": "Tonique runs on computers. Open this page on your Windows, macOS or Linux computer to install it.",
 		"system": "Operating system",
 		"button": "Download for {{system}}",
