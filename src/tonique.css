@@ -60,23 +60,6 @@
 	outline-offset: 3px;
 }
 
-/* The playhead over the hero's screenshot: bars 9 to 17, the loop it shows. */
-.tq-playhead {
-	position: absolute;
-	top: 6.7%;
-	bottom: 8.2%;
-	left: 35.2%;
-	width: 2px;
-	background: #fff;
-	box-shadow: 0 0 8px rgb(255 255 255 / 0.6);
-	animation: tq-play 15.238s linear infinite;
-}
-@keyframes tq-play {
-	to {
-		left: 53.4%;
-	}
-}
-
 .tq-pulse {
 	animation: tq-pulse 1.8s ease-in-out infinite;
 }
@@ -94,7 +77,6 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-	.tq-playhead,
 	.tq-pulse {
 		animation: none;
 	}

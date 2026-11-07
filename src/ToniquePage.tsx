@@ -85,14 +85,32 @@ function Hero() {
 					style={{ scale: reduced ? 1 : scale }}
 					className="relative rounded-xl overflow-hidden border border-[var(--tq-line)] shadow-[0_30px_120px_-30px_rgba(0,201,212,0.45)]"
 				>
-					<img
-						src="/tonique/themes/dark.webp"
-						alt={t("hero.imageAlt")}
-						width={3250}
-						height={2025}
-						className="block w-full h-auto"
-					/>
-					<div className="tq-playhead" aria-hidden="true" />
+					{/* The app playing the project's loop, recorded by tools/screenshots.sh. */}
+					{reduced ? (
+						<img
+							src="/tonique/hero.webp"
+							alt={t("hero.imageAlt")}
+							width={3250}
+							height={2025}
+							className="block w-full h-auto"
+						/>
+					) : (
+						<video
+							autoPlay
+							muted
+							loop
+							playsInline
+							poster="/tonique/hero.webp"
+							width={3250}
+							height={2025}
+							role="img"
+							aria-label={t("hero.imageAlt")}
+							className="block w-full h-auto"
+						>
+							<source src="/tonique/hero.webm" type='video/webm; codecs="av01.0.12M.08"' />
+							<source src="/tonique/hero.mp4" type='video/mp4; codecs="avc1.640033"' />
+						</video>
+					)}
 				</motion.div>
 			</div>
 		</section>
