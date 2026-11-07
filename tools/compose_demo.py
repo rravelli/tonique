@@ -2,7 +2,10 @@
 """Tonique's web demo: an 8-bar melodic house loop, 126 BPM, F minor.
 
 Every effect is circular, so tails wrap around and the loop has no seam.
-Usage: compose.py OUTPUT_FOLDER
+Usage: compose_demo.py OUTPUT_FOLDER
+
+Besides the stems and the project, writes `stems.ts` for `src/`: the
+waveforms the page draws.
 """
 import json
 import sys
@@ -384,7 +387,11 @@ LAYOUT = {  # bars where each track plays, in the app's arrangement
 }
 
 
-def project():
+GROUP_VOLUME = 0.9  # the Drums group's fader
+ARRANGEMENT_BARS = 28
+
+
+def project(master_volume):
     tracks = []
     for name, color, volume, _ in TRACKS:
         clips = []
@@ -414,7 +421,7 @@ def project():
         "bpm": float(BPM),
         "loop_range": [32.0, 64.0],
         "looping": True,
-        "master": {"volume": 0.8, "pan": 0.0, "muted": False, "effects": []},
+        "master": {"volume": master_volume, "pan": 0.0, "muted": False, "effects": []},
         "groups": [{
             "name": "Drums",
             "color": "#e5604c",
@@ -422,7 +429,7 @@ def project():
             "collapsed": False,
             "soloed": False,
             "parent": None,
-            "volume": 0.9,
+            "volume": GROUP_VOLUME,
             "pan": 0.0,
             "muted": False,
             "effects": [],
@@ -431,13 +438,41 @@ def project():
     }
 
 
+def arrangement(stems, start_bar, bars):
+    """Each track's signal after its fader, as the app plays its clips, and
+    the Drums group's, over `bars` from `start_bar`."""
+    t = start_bar * BAR + np.arange(bars * BAR)
+    tracks = {}
+    for name, _, volume, _ in TRACKS:
+        y = np.zeros((2, t.size))
+        for bar, length in LAYOUT[name]:
+            inside = (t >= bar * BAR) & (t < (bar + length) * BAR)
+            y[:, inside] = stems[name][:, (t[inside] - bar * BAR) % N]
+        tracks[name] = volume * y
+    drums = GROUP_VOLUME * (tracks["Kick"] + tracks["Clap"] + tracks["Hats"])
+    return tracks, drums
+
+
+def stems_ts(meta):
+    return "\n".join([
+        "// The demo song's stems: waveform peaks, one per column, over the 8-bar loop.",
+        f"export const LOOP_SECONDS = {LOOP:.6f};",
+        f"export const MASTER_GAIN = {meta['master']:.3f};",
+        "",
+        f"export const STEMS = {json.dumps(meta['stems'], separators=(',', ':'))} as const;",
+        "",
+    ])
+
+
 if __name__ == "__main__":
     out = Path(sys.argv[1])
     out.mkdir(parents=True, exist_ok=True)
     mix = stereo()
     meta = []
+    stems = {}
     for name, color, volume, render in TRACKS:
         x = normalized(render())
+        stems[name] = x
         write(out, f"{name}.wav", x)
         # One extra second: the page loops inside it, past any decoder delay.
         write(out, f"{name}-web.wav", x, frames=N + SR)
@@ -460,5 +495,13 @@ if __name__ == "__main__":
     master = 0.88 / peak
     print(f"mix peak {peak:.2f}, master gain {master:.3f}")
     write(out, "mix.wav", mix * master)
-    (out / "Demo Song.tonique").write_text(json.dumps(project(), indent=2))
-    (out / "meta.json").write_text(json.dumps({"loop": LOOP, "master": master, "stems": meta}))
+    # The project's master: the whole arrangement, as the app mixes it,
+    # peaking just under full scale.
+    tracks, drums = arrangement(stems, 0, ARRANGEMENT_BARS)
+    app_mix = drums + sum(y for name, y in tracks.items() if name not in ("Kick", "Clap", "Hats"))
+    master_volume = round(0.89 / np.abs(app_mix).max(), 2)
+    print(f"app mix peak {np.abs(app_mix).max():.2f}, master volume {master_volume}")
+    (out / "Demo Song.tonique").write_text(json.dumps(project(master_volume), indent=2))
+    meta = {"loop": LOOP, "master": master, "stems": meta}
+    (out / "meta.json").write_text(json.dumps(meta))
+    (out / "stems.ts").write_text(stems_ts(meta))

@@ -1,8 +1,89 @@
+diff --git a/src/core/metrics.rs b/src/core/metrics.rs
+index 647a677..9f99c94 100644
+--- a/src/core/metrics.rs
++++ b/src/core/metrics.rs
+@@ -24,6 +24,13 @@ pub const SCOPE_COLUMN: usize = 256;
+ /// ...this many of them: about 2 s at 48 kHz.
+ pub const SCOPE_COLUMNS: usize = 400;
+ 
++#[cfg(test)]
++thread_local! {
++    /// The seconds between updates, for tests that render audio offline:
++    /// the meters then follow the audio's time rather than the clock's.
++    pub static FIXED_DT: std::cell::Cell<Option<f32>> = const { std::cell::Cell::new(None) };
++}
++
+ /// A stereo channel's levels as a meter shows them: the peak, jumping up
+ /// at once and falling back steadily; the highest recent peak, held a
+ /// moment; the RMS level, averaged; and whether it clipped, latched until
+@@ -76,6 +83,8 @@ impl AudioMetrics {
+             .last_update
+             .map_or(0., |last| now.duration_since(last).as_secs_f32().min(0.25));
+         self.last_update = Some(now);
++        #[cfg(test)]
++        let dt = FIXED_DT.with(std::cell::Cell::get).unwrap_or(dt);
+         let levels = meter.take_levels();
+         if levels.is_some() {
+             self.idle = 0.;
+diff --git a/src/ui/app/tests.rs b/src/ui/app/tests.rs
+index 30b1cfe..c191c42 100644
+--- a/src/ui/app/tests.rs
++++ b/src/ui/app/tests.rs
+@@ -95,6 +95,17 @@ fn app_with(start: Start) -> Harness<'static, ToniqueApp> {
+ /// The app as `main` makes it without an audio device, its browser showing
+ /// `folder`.
+ fn new_app(cc: &eframe::CreationContext<'_>, folder: &Path, settings: Settings) -> ToniqueApp {
++    let engine = engine_without_audio(&settings);
++    new_app_with(cc, folder, settings, engine)
++}
++
++/// [`new_app`], on `engine`: one whose processor the test keeps, to play.
++fn new_app_with(
++    cc: &eframe::CreationContext<'_>,
++    folder: &Path,
++    settings: Settings,
++    engine: tonique_engine::engine::Engine,
++) -> ToniqueApp {
+     let config = serde_json::json!({ "directories": [folder] });
+     let dir = config_dir().unwrap();
+     std::fs::create_dir_all(&dir).unwrap();
+@@ -102,7 +113,6 @@ fn new_app(cc: &eframe::CreationContext<'_>, folder: &Path, settings: Settings)
+ 
+     cc.egui_ctx.set_fonts(fonts());
+     egui_extras::install_image_loaders(&cc.egui_ctx);
+-    let engine = engine_without_audio(&settings);
+     ToniqueApp::new(engine, Err("no audio in tests".into()), settings, cc)
+ }
+ 
 diff --git a/src/ui/app/tests/readme.rs b/src/ui/app/tests/readme.rs
-index b1f1cbe..0e80221 100644
+index b1f1cbe..598aad0 100644
 --- a/src/ui/app/tests/readme.rs
 +++ b/src/ui/app/tests/readme.rs
-@@ -20,7 +20,7 @@ use tonique_engine::time::BeatPos;
+@@ -3,9 +3,10 @@
+ //! to write them to `images/`, or to `TONIQUE_IMAGES_DIR` (CI keeps them
+ //! apart from the folder's other images).
+ 
+-use super::new_app;
++use super::new_app_with;
+ use crate::{
+     config::{config_dir, settings::Settings},
++    core::metrics::FIXED_DT,
+     ui::{app::ToniqueApp, project::ProjectAction},
+ };
+ use egui::{Event, Vec2, vec2};
+@@ -13,18 +14,36 @@ use egui_kittest::{Harness, kittest::Queryable};
+ use std::{
+     path::{Path, PathBuf},
+     process::Command,
++    sync::{Arc, Mutex},
+     time::{Duration, Instant},
+ };
+-use tonique_engine::time::BeatPos;
++use tonique_engine::{
++    engine::{AudioProcessor, Engine, render_offline},
++    time::BeatPos,
++};
+ 
  /// The window, in points: at [`PIXELS_PER_POINT`], the images are
  /// 1625 × 1013 pixels.
  const SIZE: Vec2 = vec2(1300., 810.);
@@ -11,7 +92,25 @@ index b1f1cbe..0e80221 100644
  /// The song's first bars, fit in the timeline: all of it and a little room.
  const SHOWN_BEATS: f64 = 30. * 4.;
  /// Decoding the stems takes a moment; longer, something's wrong.
-@@ -37,6 +37,9 @@ fn images_dir() -> PathBuf {
+ const AUDIO_TIMEOUT: Duration = Duration::from_secs(60);
++const SAMPLE_RATE: f64 = 48_000.;
++/// Frames an output device asks for at once: the load shown is the last
++/// buffer's.
++const BUFFER: usize = 400;
++/// Where the theme images are taken, playing: from bar 13, where every
++/// track plays, long enough for the meters to settle.
++const PLAY_FROM: BeatPos = BeatPos(48.);
++const PLAY_SECONDS: f64 = 2.5;
++/// The hero's video: the project's loop, bars 9 to 17 (320/21 s at 126
++/// BPM), is exactly 480 frames at this rate.
++const FPS: f64 = 31.5;
++const LOOP_FROM: BeatPos = BeatPos(32.);
++const LOOP_FRAMES: usize = 480;
++const WARM_UP_STEPS: usize = 50;
+ 
+ fn repo() -> &'static Path {
+     Path::new(env!("CARGO_MANIFEST_DIR"))
+@@ -37,6 +56,9 @@ fn images_dir() -> PathBuf {
  
  /// The demo song, made afresh in the test's own folder.
  fn demo_song() -> PathBuf {
@@ -21,7 +120,114 @@ index b1f1cbe..0e80221 100644
      let dir = config_dir().unwrap().join("Demo Song");
      let status = Command::new("python3")
          .arg(repo().join("scripts/make_demo.py"))
-@@ -125,3 +128,70 @@ fn save(harness: &mut Harness<'_, ToniqueApp>, name: &str) {
+@@ -49,15 +71,30 @@ fn demo_song() -> PathBuf {
+ 
+ /// The app with `project` open, in `theme`, once its audio is decoded.
+ fn open(project: &Path, theme: &str) -> Harness<'static, ToniqueApp> {
++    open_with_processor(project, theme).0
++}
++
++/// [`open`], and the engine's processor, to play it with [`play`].
++fn open_with_processor(
++    project: &Path,
++    theme: &str,
++) -> (Harness<'static, ToniqueApp>, AudioProcessor) {
+     let settings = Settings {
+         theme: theme.to_owned(),
+         ..Settings::default()
+     };
+     let folder = project.parent().unwrap().to_owned();
++    let processor = Arc::new(Mutex::new(None));
++    let slot = processor.clone();
+     let mut harness = Harness::builder()
+         .with_size(SIZE)
+         .with_pixels_per_point(PIXELS_PER_POINT)
+-        .build_eframe(move |cc| new_app(cc, &folder, settings));
++        .build_eframe(move |cc| {
++            let (engine, processor) = Engine::new(settings.engine_config(SAMPLE_RATE));
++            *slot.lock().unwrap() = Some(processor);
++            new_app_with(cc, &folder, settings, engine)
++        });
++    let processor = processor.lock().unwrap().take().unwrap();
+     let app = harness.state_mut();
+     // As it looks with a device: no warning that there's none.
+     app.state.ignore_missing_audio();
+@@ -74,7 +111,62 @@ fn open(project: &Path, theme: &str) -> Harness<'static, ToniqueApp> {
+     grid.fit(BeatPos(0.), BeatPos(SHOWN_BEATS), timeline.width());
+     grid.offset.y = 0.;
+     harness.run_steps(4);
+-    harness
++    (harness, processor)
++}
++
++/// Plays from `from` for `frames` frames of the video, each its share of
++/// audio rendered and then the app stepped once, the meters timed by the
++/// audio: the same on every run, however long drawing takes. Calls `frame`
++/// with each one's number, from 1.
++fn play(
++    harness: &mut Harness<'_, ToniqueApp>,
++    processor: &mut AudioProcessor,
++    from: BeatPos,
++    frames: usize,
++    mut frame: impl FnMut(&mut Harness<'_, ToniqueApp>, usize),
++) {
++    harness.event(Event::PointerGone);
++    // Stopped a moment first, rendering: the engine takes up the graph its
++    // threads built, or the first blocks played would depend on when.
++    for _ in 0..WARM_UP_STEPS {
++        render_offline(processor, BUFFER, 2);
++        harness.run_steps(1);
++        std::thread::sleep(Duration::from_millis(10));
++    }
++    let app = harness.state_mut();
++    app.state.seek(from);
++    app.state.play();
++    let mut rendered = 0;
++    for f in 1..=frames {
++        // In whole device buffers, as an output asks for them.
++        let due = (f as f64 / FPS * SAMPLE_RATE) as usize / BUFFER * BUFFER;
++        render_offline(processor, due - rendered, 2);
++        FIXED_DT.set(Some((due - rendered) as f32 / SAMPLE_RATE as f32));
++        rendered = due;
++        harness.run_steps(1);
++        frame(harness, f);
++    }
++    FIXED_DT.set(None);
++}
++
++/// The hero's video: the loop played twice, the second time saved as
++/// `hero-frames/0000.png`... (it loops seamlessly into its start), the
++/// first frame also as `hero.png`, the video's poster.
++fn record_hero(harness: &mut Harness<'_, ToniqueApp>, processor: &mut AudioProcessor) {
++    let dir = images_dir().join("hero-frames");
++    std::fs::create_dir_all(&dir).unwrap();
++    play(harness, processor, LOOP_FROM, 2 * LOOP_FRAMES, |harness, f| {
++        if f <= LOOP_FRAMES {
++            return;
++        }
++        let index = f - LOOP_FRAMES - 1;
++        let image = harness.render().expect("the app renders");
++        image.save(dir.join(format!("{index:04}.png"))).unwrap();
++        if index == 0 {
++            image.save(images_dir().join("hero.png")).unwrap();
++        }
++    });
++    eprintln!("Wrote {LOOP_FRAMES} frames to {}", dir.display());
+ }
+ 
+ /// Until every clip's file is decoded: drawn before, they'd have no
+@@ -118,6 +210,10 @@ fn readme_images() {
+ fn save(harness: &mut Harness<'_, ToniqueApp>, name: &str) {
+     harness.event(Event::PointerGone);
+     harness.run_steps(4);
++    write(harness, name);
++}
++
++fn write(harness: &mut Harness<'_, ToniqueApp>, name: &str) {
+     let image = harness.render().expect("the app renders");
+     let dir = images_dir();
+     std::fs::create_dir_all(&dir).unwrap();
+@@ -125,3 +221,75 @@ fn save(harness: &mut Harness<'_, ToniqueApp>, name: &str) {
      image.save(&path).unwrap();
      eprintln!("Wrote {}", path.display());
  }
@@ -38,9 +244,14 @@ index b1f1cbe..0e80221 100644
 +        "dark", "light", "studio", "console", "session", "slate", "tape", "graphite",
 +        "high-contrast",
 +    ] {
-+        let mut harness = open(&song, theme);
++        let (mut harness, mut processor) = open_with_processor(&song, theme);
 +        harness.get_by_label("Effects").click();
-+        save(&mut harness, &format!("theme-{theme}"));
++        let frames = (PLAY_SECONDS * FPS) as usize;
++        play(&mut harness, &mut processor, PLAY_FROM, frames, |_, _| {});
++        write(&mut harness, &format!("theme-{theme}"));
++        if theme == "dark" {
++            record_hero(&mut harness, &mut processor);
++        }
 +    }
 +
 +    // A track's effects, in the bottom panel.
